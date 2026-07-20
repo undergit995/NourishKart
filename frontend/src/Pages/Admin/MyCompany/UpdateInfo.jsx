@@ -495,26 +495,6 @@ const [openDelete, setOpenDelete] = useState(false);
       });
     }
   };
-//   const handleDelete = async () => {
-//   try {
-//     setLoading(true);
-
-//     let res = await api.delete(`/company/delete/${id}`);
-
-//     emqueueSnackbar(res.data.message, {
-//       variant: "success",
-//     });
-
-//     setOpenDelete(false);
-//     navigate("/company");
-//   } catch (error) {
-//     enqueueSnackbar(error.message, {
-//       variant: "error",
-//     });
-//   } finally {
-//     setLoading(false);
-//   }
-// };
 
   const handlePost = async (e) => {
     e.preventDefault();

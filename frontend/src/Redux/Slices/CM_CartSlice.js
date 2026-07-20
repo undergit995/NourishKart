@@ -77,7 +77,6 @@ const cartSlice = createSlice({
       state.totals = null;
       state.items = state.items.map((item) => {
         const { coupon, ...rest } = item;
-        // The coupon is on the item, so we remove it.
         return rest;
       });
     },

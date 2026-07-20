@@ -33,7 +33,7 @@ import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useDispatch, useSelector } from "react-redux";
-import { getProducts, postProducts } from "../../../Redux/Slices/ProductSlice";
+import { getProducts, postProducts } from "../../../Redux/Slices/productSlice";
 import { useNavigate } from "react-router-dom";
 import { PrimaryButton } from "../../../Components/Common/Buttons";
 import Input from "@mui/material/Input";
@@ -103,8 +103,8 @@ export default function AdminProducts() {
   const [categories, setCategories] = useState([]);
   const [openCategoryModal, setOpenCategoryModal] = useState(false);
   const [categoryName, setCategoryName] = useState("");
-  const [editCategories,setEditCategories]= useState(null)
-  const [categoryDescription,setCategoryDescription] = useState('')
+  const [editCategories, setEditCategories] = useState(null);
+  const [categoryDescription, setCategoryDescription] = useState("");
   const mountedRef = useRef(true);
 
   useEffect(() => {
@@ -124,17 +124,16 @@ export default function AdminProducts() {
   };
   const handleEditCategory = (category) => {
     setEditCategories(category);
-  setCategoryName(category.name);
-  setCategoryDescription(category.description || "");
-  setOpenCategoryModal(true);
+    setCategoryName(category.name);
+    setCategoryDescription(category.description || "");
+    setOpenCategoryModal(true);
   };
 
   const handleCloseCategoryModal = () => {
     setOpenCategoryModal(false);
     setCategoryName("");
-  setCategoryDescription("");
-  setEditCategories(null);
-    
+    setCategoryDescription("");
+    setEditCategories(null);
   };
 
   const [productData, setProductData] = useState({
@@ -177,7 +176,7 @@ export default function AdminProducts() {
 
     setPhotos([]);
   };
-console.log(productData);
+  console.log(productData);
 
   const handleSaveCategory = async () => {
     if (!categoryName.trim()) return;
@@ -186,19 +185,14 @@ console.log(productData);
       setLoading(true);
 
       if (editCategories) {
-        await api.put(
-          `/category/updateProductCategory/${editCategories._id}`,
-          {
-            name: categoryName,
-            
-    description: categoryDescription,
-          },
-        );
+        await api.put(`/category/updateProductCategory/${editCategories._id}`, {
+          name: categoryName,
+          description: categoryDescription,
+        });
       } else {
         await api.post("/category/addProductCategory", {
           name: categoryName,
-          
-    description: categoryDescription,
+          description: categoryDescription,
         });
       }
       await getCategories();
@@ -212,31 +206,28 @@ console.log(productData);
     }
   };
   const handleDeleteCategory = async () => {
-  const category = categories.find(
-    (c) => {return String(c._id) === String(productData.category)?true:false}
-  );
-console.log(category);
+    const category = categories.find((c) => {
+      return String(c._id) === String(productData.category) ? true : false;
 
-  if (!category) return;
+    });
+  
+    if (!category) return;
 
-  try {
-    setLoading(true);
-    await api.delete(
-      `/category/deleteProductCategory/${category._id}`
-    );
+    try {
+      setLoading(true);
+      await api.delete(`/category/deleteProductCategory/${category._id}`);
+      await getCategories();
 
-    await getCategories();
-
-    setProductData((prev) => ({
-      ...prev,
-      category: ""
-    }));
-  } catch (error) {
-    console.loh(error.message);
-  } finally {
-    setLoading(false);
-  }
-};
+      setProductData((prev) => ({
+        ...prev,
+        category: "",
+      }));
+    } catch (error) {
+      console.loh(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -248,46 +239,43 @@ console.log(category);
   };
 
   const handleImageChange = (e) => {
-  const files = Array.from(e.target.files);
-  
-  const allowedTypes = [
-    "image/png",
-    "image/jpeg",
-    "image/jpg",
-    "image/webp",
-  ];
+    const files = Array.from(e.target.files);
 
-  const validImages = files.filter((file) =>
-    allowedTypes.includes(file.type)
-  );
+    const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
 
-  const invalidFiles = files.length - validImages.length;
-
-  if (invalidFiles > 0) {
-    enqueueSnackbar("Only image files (PNG, JPG, JPEG, WEBP) are allowed", { variant: "error" });
-  }
-
-  if (validImages.length === 0) {
-    return; 
-  }
-
-  setPhotos((prev) => {
-    const newFiles = validImages.filter(
-      (file) =>
-        !prev.some(
-          (p) => p.file.name === file.name && p.file.size === file.size,
-        ),
+    const validImages = files.filter((file) =>
+      allowedTypes.includes(file.type),
     );
 
-    return [
-      ...prev,
-      ...newFiles.map((file) => ({
-        file,
-        preview: URL.createObjectURL(file),
-      })),
-    ];
-  });
-};
+    const invalidFiles = files.length - validImages.length;
+
+    if (invalidFiles > 0) {
+      enqueueSnackbar("Only image files (PNG, JPG, JPEG, WEBP) are allowed", {
+        variant: "error",
+      });
+    }
+
+    if (validImages.length === 0) {
+      return;
+    }
+
+    setPhotos((prev) => {
+      const newFiles = validImages.filter(
+        (file) =>
+          !prev.some(
+            (p) => p.file.name === file.name && p.file.size === file.size,
+          ),
+      );
+
+      return [
+        ...prev,
+        ...newFiles.map((file) => ({
+          file,
+          preview: URL.createObjectURL(file),
+        })),
+      ];
+    });
+  };
 
   const removeFile = (index) => {
     setPhotos((prev) => prev.filter((_, i) => i !== index));
@@ -306,9 +294,12 @@ console.log(category);
     try {
       setLoading(true);
       const response = await api.get("/category/allCategories");
-      setCategories(p=>response?.data?.categories?.filter((i)=>{
-        return i.isAvailable?i:null;
-      }) || []);
+      setCategories(
+        (p) =>
+          response?.data?.categories?.filter((i) => {
+            return i.isAvailable ? i : null;
+          }) || [],
+      );
     } catch (error) {
       console.log(error);
     } finally {
@@ -403,8 +394,8 @@ console.log(category);
 
       const response = await api.post("/products/addProduct", formData);
       dispatch(postProducts(response.data.data));
-      if(response.data.data){
-        enqueueSnackbar("Product Added Successfully", {variant: "success"});
+      if (response.data.data) {
+        enqueueSnackbar("Product Added Successfully", { variant: "success" });
       }
       closeAddProductModal();
     } catch (error) {
@@ -488,10 +479,9 @@ console.log(category);
   ]);
   console.log(displayProducts);
 
-  
-                  const categoryMap = useMemo(() => {
-  return new Map(categories.map(c => [String(c._id), c]));
-}, [categories]);
+  const categoryMap = useMemo(() => {
+    return new Map(categories.map((c) => [String(c._id), c]));
+  }, [categories]);
   useEffect(() => {
     getProductsData();
     getCategories();
@@ -508,7 +498,7 @@ console.log(category);
     <Box
       sx={{
         margin: "auto",
-        p:'1px',
+        p: "1px",
         position: "relative",
         width: "100%",
         backgroundColor: "white",
@@ -650,17 +640,6 @@ console.log(category);
                     </FormControl>
                   </Grid>
 
-                  <Grid size={{ xs: 12, md: 1 }}>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={inStockOnly}
-                          onChange={(e) => setInStockOnly(e.target.checked)}
-                        />
-                      }
-                      label="Stock"
-                    />
-                  </Grid>
 
                   <Grid size={{ xs: 12, md: 2 }}>
                     <Button
@@ -768,7 +747,7 @@ console.log(category);
                 sx={{ borderRadius: "10px" }}
               />
             </FormControl>
- 
+
             <Button
               component="label"
               variant="contained"
@@ -953,7 +932,9 @@ console.log(category);
                 color="rgba(23, 75, 231, 0.8)"
                 disabled={!productData.category}
                 onClick={() => {
-const category = categoryMap.get(String(productData.category));
+                  const category = categoryMap.get(
+                    String(productData.category),
+                  );
 
                   if (category) {
                     handleEditCategory(category);
@@ -966,8 +947,7 @@ const category = categoryMap.get(String(productData.category));
               <IconButton
                 color="error"
                 disabled={!productData.category}
-  onClick={
-      handleDeleteCategory}
+                onClick={handleDeleteCategory}
               >
                 <DeleteIcon />
               </IconButton>
@@ -992,14 +972,14 @@ const category = categoryMap.get(String(productData.category));
                   sx={{ mt: 1 }}
                 />
                 <TextField
-  fullWidth
-  label="Category Description"
-  value={categoryDescription}
-  onChange={(e) => setCategoryDescription(e.target.value)}
-  sx={{ mt: 2 }}
-  multiline
-  rows={3}
-/>
+                  fullWidth
+                  label="Category Description"
+                  value={categoryDescription}
+                  onChange={(e) => setCategoryDescription(e.target.value)}
+                  sx={{ mt: 2 }}
+                  multiline
+                  rows={3}
+                />
               </DialogContent>
 
               <DialogActions>

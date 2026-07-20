@@ -15,5 +15,9 @@
     "otp-generator": "^4.0.1",
     "razorpay": "^2.9.6",
     "socket.io": "^4.7.5"
+  },
+  "scripts":{
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   }
 }

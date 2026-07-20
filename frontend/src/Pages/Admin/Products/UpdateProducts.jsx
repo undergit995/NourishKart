@@ -31,13 +31,11 @@ import {
 } from "../../../Components/Common/Buttons";
 import { useDispatch, useSelector } from "react-redux";
 import { enqueueSnackbar, SnackbarProvider } from "notistack";
-import { updateProduct } from "../../../Redux/Slices/ProductSlice";
-import axios from "axios";
+import { updateProduct } from "../../../Redux/Slices/productSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import styled from "@emotion/styled";
 import api from "../../../api/axiosConfig";
-import { getProducts } from "../../../Redux/Slices/ProductSlice";
 import { Divider } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { v4 as uuidv4 } from "uuid";

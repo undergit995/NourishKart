@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const cors = require('cors')
-const ConnectDB = require('./config/connectDB');
+const ConnectDB = require('./Config/ConnectDB');
 const RegRouter = require("./Routes/Auth/Registration")
 const ResetRouter = require("./Routes/Auth/ResetPassword")
 const LoginRouter = require("./Routes/Auth/Login")
@@ -22,7 +22,7 @@ const couponRouter = require('./Routes/Coupon/couponRouter');
 
 const customerProfileRouter = require('./Routes/customer/customerProfile');
 const isCustomer = require('./MiddleWare/customerAuth');
-const upload = require('./config/multerConfig');
+const upload = require('./Config/multerConfig');
 const PaymentRouter = require('./Routes/Payments/razorpayRoutes');
 const DeveloperRouter = require('./Routes/DevepolerRoutes/Devepoler');
 const reviewRouter = require('./Routes/Review/Review');
@@ -52,13 +52,17 @@ const { Server } = require("socket.io");
 
 // app.post("/upload",)
 const app = express()
-app.use(cors())
-
+app.use(cors({
+    // Allow requests from your new Vercel frontend
+    // origin: 'https://nourish-kart.vercel.app/', 
+    // credentials: true // Allow cookies to be sent
+}));
+ 
 // Use cookie-parser middleware to parse cookies from incoming requests
 app.use(cookieParser());
 
 // Use the conditional JSON parser middleware.
-// IMPORTANT: The webhook route needs the raw body for signature verification.
+// IMPORTANT: The webhook route needs the raw body for signature verification
 // We apply the raw parser specifically for this route.
 app.use('/api/payment/refund-webhook', express.raw({ type: 'application/json' }));
 
@@ -73,7 +77,7 @@ app.use("/upload", express.static(path.join(__dirname, "upload")))
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173", // Your frontend URL
+        origin: "https://nourish-kart-nugdm6vlj-avinash-b-v.vercel.app", // Your frontend URL
         methods: ["GET", "POST"]
     }
 });
